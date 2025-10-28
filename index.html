@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Weather Viewer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    /* General Body Styling */
+    body {
+      font-family: 'Inter', sans-serif;
+      background-image: url("https://static.vecteezy.com/system/resources/previews/056/635/420/non_2x/rainy-day-wallpaper-hd-photo.jpeg");
+      background-position: center;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      color: #334155;
+    }
+
+    /* Container */
+    .weather-container {
+      background-color: #ffffff;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                  0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    /* Title */
+    .weather-app-title {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    /* Input */
+    .city-input {
+      padding: 0.75rem 1rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.5rem;
+      width: calc(100% - 2rem);
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      color: #475569;
+      transition: all 0.2s ease-in-out;
+    }
+
+    /* Button */
+    .get-weather-button {
+      background-color: #3b82f6;
+      color: #ffffff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+    }
+
+    .get-weather-button:hover {
+      background-color: #2563eb;
+      transform: scale(1.03);
+    }
+
+    /* Weather info */
+    .weather-info {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e2e8f0;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .weather-info h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #1e293b;
+    }
+
+    .weather-info p {
+      font-size: 1.1rem;
+      margin-bottom: 0.4rem;
+      color: #475569;
+    }
+
+    .weather-info .temp {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 0.5rem;
+    }
+
+    .error-message {
+      color: #ef4444;
+      font-weight: 500;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="weather-container">
+    <h1 class="weather-app-title">Weather App ☀️</h1>
+
+    <input type="text" id="cityInput" placeholder="Enter city name..." class="city-input" />
+    <button id="getWeatherBtn" class="get-weather-button">Get Weather</button>
+
+    <div id="weatherInfo" class="weather-info">
+      <p>Enter a city name and click "Get Weather" to see the current conditions.</p>
+    </div>
+  </div>
+
+  <script>
+    // Replace this with your own OpenWeatherMap API key
+    const API_KEY = '2b10dc257ead7be2bc519cddf36cad3a';
+
+    const weatherInfoDiv = document.getElementById('weatherInfo');
+    const cityInput = document.getElementById('cityInput');
+    const getWeatherBtn = document.getElementById('getWeatherBtn');
+
+    // Fetch weather data
+    async function getWeatherData(city) {
+      weatherInfoDiv.innerHTML = '<p>Loading weather data... ⏳</p>';
+
+      const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
+
+      try {
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        displayWeather(data);
+      } catch (error) {
+        console.error('Error fetching weather data:', error);
+
+        let errorMessage = 'Failed to fetch weather data. Please try again.';
+        if (error.message.includes('404')) {
+          errorMessage = 'City not found. Please check the spelling and try again.';
+        } else if (error.message.includes('401')) {
+          errorMessage = 'Invalid or missing API key.';
+        }
+
+        weatherInfoDiv.innerHTML = `<p class="error-message">${errorMessage} 😔</p>`;
+      }
+    }
+
+    // Display weather data
+    function displayWeather(data) {
+      const cityName = data.name;
+      const country = data.sys.country;
+      const temperature = data.main.temp;
+      const description = data.weather[0].description;
+      const humidity = data.main.humidity;
+      const windSpeed = data.wind.speed;
+
+      const formattedDescription = description.charAt(0).toUpperCase() + description.slice(1);
+
+      weatherInfoDiv.innerHTML = `
+        <h2>${cityName}, ${country}</h2>
+        <p class="temp">${temperature}°C</p>
+        <p>${formattedDescription}</p>
+        <p>Humidity: ${humidity}%</p>
+        <p>Wind Speed: ${windSpeed} m/s</p>
+      `;
+    }
+
+    // Button click event
+    getWeatherBtn.addEventListener('click', () => {
+      const city = cityInput.value.trim();
+      if (city) {
+        getWeatherData(city);
+      } else {
+        weatherInfoDiv.innerHTML = '<p class="error-message">Please enter a city name! 💡</p>';
+      }
+    });
+
+    // Enter key support
+    cityInput.addEventListener('keypress', (event) => {
+      if (event.key === 'Enter') {
+        getWeatherBtn.click();
+      }
+    });
+
+    // Default message
+    window.onload = () => {
+      weatherInfoDiv.innerHTML = '<p>Enter a city name and click "Get Weather" to see the current conditions.</p>';
+    };
+  </script>
+</body>
+</html>
