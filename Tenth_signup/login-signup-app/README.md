@@ -3,6 +3,69 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
+React Login & Signup App – Setup Guide
+Prerequisites
+
+Install Node.js (LTS) from https://nodejs.org
+
+Verify installation:
+
+node -v
+npm -v
+
+Create React Application
+npx create-react-app login-signup-app
+cd login-signup-app
+code .
+
+Project Structure
+src/
+├── App.js
+├── App.css
+├── index.js
+└── components/
+    ├── LoginForm.js
+    └── SignupForm.js
+
+Add Files
+
+Paste provided code into:
+
+App.js
+
+App.css
+
+components/LoginForm.js
+
+components/SignupForm.js
+
+Ensure imports are correct and no extra text exists.
+
+Run the Application
+npm start
+
+
+Open browser at:
+
+http://localhost:3000
+
+Output
+
+Login page displayed
+
+Switch between Login & Signup
+
+Dashboard shown after login
+
+Logout functionality available
+
+Notes
+
+Built using React functional components
+
+Uses useState hook
+
+No backend required
 
 In the project directory, you can run:
 
