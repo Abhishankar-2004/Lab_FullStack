@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+
 app.use(express.json());
 
 let products = [
@@ -8,12 +9,10 @@ let products = [
   { id: 3, name: 'Keyboard', price: 75 }
 ];
 
-// --- GET ALL PRODUCTS ---
 app.get('/api/products', (req, res) => {
   res.json(products);
 });
 
-// --- GET PRODUCT BY ID ---
 app.get('/api/products/:id', (req, res) => {
   const product = products.find(p => p.id === parseInt(req.params.id));
   if (!product) {
@@ -22,7 +21,6 @@ app.get('/api/products/:id', (req, res) => {
   res.json(product);
 });
 
-// --- CREATE NEW PRODUCT ---
 app.post('/api/products', (req, res) => {
   if (!req.body.name || !req.body.price) {
     return res.status(400).json({ message: 'Name and price are required.' });
@@ -39,6 +37,7 @@ app.post('/api/products', (req, res) => {
 });
 
 const port = 5000;
+
 app.listen(port, () => {
   console.log(`Express.js API is running on http://localhost:${port}`);
 });

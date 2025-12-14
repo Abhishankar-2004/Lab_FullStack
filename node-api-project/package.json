@@ -1,21 +1,31 @@
 {
   "name": "api-project",
   "version": "1.0.0",
-  "description": "",
+  "description": "Node.js REST API for Product Management - Built with HTTP module and Express.js",
   "main": "Express-api.js",
   "scripts": {
+    "start": "node Express-api.js",
+    "start:http": "node Node-http-server.js",
+    "dev": "nodemon Express-api.js",
+    "dev:http": "nodemon Node-http-server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "nodejs",
+    "express",
+    "rest-api",
+    "product-management"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "mongoose": "^8.19.1"
+    "express": "^5.1.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }
